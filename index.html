@@ -18,20 +18,14 @@
 <div class="page-box" >
     <div class="carRotate">
         <div id="blackCar" class="blackCar"></div>
-        <div id="silveryCar" class="silveryCar"></div>
         <div id="whiteCar" class="whiteCar"></div>
         <div id="redCar" class="redCar"></div>
-        <div id="blueCar" class="blueCar"></div>
-        <div id="goldenCar" class="goldenCar"></div>
     </div>
     <div class="tiaoBox">
         <div class="MT-box">
             <span data-value="blackCar"></span>
-            <span data-value="silveryCar"></span>
             <span data-value="whiteCar"></span>
             <span data-value="redCar"></span>
-            <span data-value="blueCar"></span>
-            <span data-value="goldenCar"></span>
         </div>
     </div>
 </div>
@@ -42,23 +36,13 @@
 <script src="js/car_rotate.js"></script>
 <script>
     $(document).ready(function () {
-        var imgLength = 72, width=952,height=354,speed=150;
+        var imgLength = 72, width=952,height=354,speed=60;
         var blackCar = new c2dRotate('#blackCar',{
             imgLength: imgLength,//必填
             idName:'black',
             width: width,//插件宽
             height: height,//插件高
             imgPath: "img/rongwei/black/hei_se.00",//图片路径  可填  默认img/
-            tSpeed:speed,
-            imgType: ".png",//图片类型  可填  默认.png
-            isAuto: true//是否自动播放  可填      默认false
-        });
-        var silveryCar = new c2dRotate('#silveryCar',{
-            imgLength: imgLength,//必填
-            idName:'silvery',
-            width: width,
-            height: height,
-            imgPath: "img/rongwei/silvery/yin_se.00",//图片路径  可填  默认img/
             tSpeed:speed,
             imgType: ".png",//图片类型  可填  默认.png
             isAuto: true//是否自动播放  可填      默认false
@@ -83,57 +67,37 @@
             imgType: ".png",//图片类型  可填  默认.png
             isAuto: true//是否自动播放  可填      默认false
         });
-        var blueCar = new c2dRotate('#blueCar',{
-            imgLength: imgLength,//必填
-            idName:'blue',
-            width: width,
-            height: height,
-            imgPath: "img/rongwei/blue/lan_se.00",//图片路径  可填  默认img/
-            tSpeed:speed,
-            imgType: ".png",//图片类型  可填  默认.png
-            isAuto: true//是否自动播放  可填      默认false
-        });
-        var goldenCar = new c2dRotate('#goldenCar',{
-            imgLength: imgLength,//必填
-            idName:'golden',
-            width: width,
-            height: height,
-            imgPath: "img/rongwei/golden/zong_se.00",//图片路径  可填  默认img/
-            tSpeed:speed,
-            imgType: ".png",//图片类型  可填  默认.png
-            isAuto: true//是否自动播放  可填      默认false
-        });
+
 
         //默认当前显示的为黑色车
         var chosedValue = 'blackCar';
-
         //不同颜色车图切换
         var timerList = [
             {handel:blackCar,value:'blackCar'},
-            {handel:silveryCar,value:'silveryCar'},
             {handel:whiteCar,value:'whiteCar'},
-            {handel:redCar,value:'redCar'},
-            {handel:blueCar,value:'blueCar'},
-            {handel:goldenCar,value:'goldenCar'}
+            {handel:redCar,value:'redCar'}
         ];
 
         $('.MT-box').on('click','span',function(){
             var value = $(this).data('value');
-            if(chosedValue!=value){
-                for(var i=0;i<timerList.length;i++){
+
+            if(chosedValue!=value) {
+                for (var i = 0; i < timerList.length; i++) {
                     //暂停所有的旋转
+
                     timerList[i].handel.pause();
+
                     //当前选中的车图展示
-                    if(timerList[i].value==value){
-                        timerList[i].tIndex = 0;
+                    if (timerList[i].value == value) {
                         timerList[i].handel.autoPlay();
-                        $('.carRotate div').css({'opacity':0,'z-index':1});
-                        $('#'+value).css({'opacity':1,'z-index':2});
+                        $('.carRotate div').css({'opacity': 0, 'z-index': 1});
+                        $('#' + value).css({'opacity': 1, 'z-index': 2});
                         chosedValue = value;
                     }
                 }
 
             }
+
         })
     })
 </script>

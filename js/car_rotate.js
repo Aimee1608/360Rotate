@@ -17,6 +17,7 @@ var c2dRotate = function (dom, obj) {
     self.imgWidth=0;
     self.imgHeight = 0;//图片的宽高
     self.autoTimer = null;
+    self.paused = true;//判断当前是否暂停状态
     self.initData();
 
 };
@@ -36,129 +37,132 @@ c2dRotate.prototype =  {
             for (var i = 0; i < self.imgLength; i++) {
                 var img2 = new Image();
                 //注意注意3的倍数
-                if(i%3==0){
-                    if(i<10){
-                        img2.src = self.imgPath + '0' + i + self.imgType;
-                    }else{
-                        img2.src = self.imgPath + i + self.imgType;
-                    }
-                    self.tImgObj.push(img2);
+                //if(i%3==0){
+                if(i<10){
+                    img2.src = self.imgPath + '0' + i + self.imgType;
+                }else{
+                    img2.src = self.imgPath + i + self.imgType;
                 }
+                self.tImgObj.push(img2);
+                //}
+
             }
 
         });
+        var timer = setTimeout(function () {
+            self.move();
+            self.autoPlay();
+            self.initHScroll();
+        }, 300);
+    },
+    autoPlay :function () {
+        var self = this;
+        if (self.isAuto) {
+            self.paused = false;
             var timer = setTimeout(function () {
-                self.move();
-                self.autoPlay();
-                self.initHScroll();
-            }, 300);
-        },
-        autoPlay :function () {
-            var self = this;
-            if (self.isAuto) {
-                var timer = setTimeout(function () {
-                    self.autoTimer = setInterval(function () {
-                        self.jian()
-                    }, self.tSpeed);
-                    clearTimeout(timer);
-                }, 100)
-            }
-        },
-
-        //向右转
-        add :function() {
-            var self = this;
-            self.tIndex++;
-            if (self.tIndex > self.tImgObj.length - 1) {
-                self.tIndex = 0
-            }
-            self.move()
-        },
-        //向左转
-        jian: function() {
-            var self = this;
-            self.tIndex--;
-            if (self.tIndex < 0) {
-                self.tIndex = self.tImgObj.length - 1
-            }
-            self.move()
-        },
-        //移动
-        move:function() {
-            var self = this;
-            self.content.clearRect(0, 0, self.tWidth, self.tHeight);
-            self.content.drawImage(self.tImgObj[self.tIndex], 0, (self.tHeight - self.tWidth / self.imgWidth * self.imgHeight) / 2, self.tWidth, self.tWidth / self.imgWidth * self.imgHeight)
-
-        },
-        pause:function(){
-            var self = this;
-            clearInterval(self.autoTimer);
-        },
-        //手动切换方法
-        initHScroll:function () {
-            var self = this;
-            var nHStartX;
-            var isHMove = false;//是否正在移动中
-            var hasMove = false;//是否触发了touchmove 事件
-            function initHMoveStart(e) {
-                e.preventDefault();
-                hasMove = false;
-                if (e.type == "touchstart") {
-                    nHStartX =event.touches[0].pageX
-                } else {
-                    nHStartX = e.x || e.pageX
-                }
-                isHMove = true;
-            }
-
-            function initHMoveMove(e) {
-                e.preventDefault();
-                //console.log(999);
-                hasMove = true;
-                if (isHMove) {
-                    var moveP;
-                    if (e.type == "touchmove") {
-                        moveP = event.touches[0].pageX;
-
-                    } else {
-                        moveP = e.x || e.pageX
-                    }
-                    var hm = nHStartX - moveP;
-                    if (hm < 0 ) {
-
-                        if (self.isAuto) {
-                            clearInterval(self.autoTimer)
-                        }
-                        self.add()
-                    }else if(hm > 0 ){
-
-                        if (self.isAuto) {
-                            clearInterval(self.autoTimer)
-                        }
-                        self.jian()
-                    }
-                    nHStartX = moveP
-                }
-            }
-
-            function initHMoveEnd(e) {
-                e.preventDefault();
-                console.log(isHMove,hasMove);
-                if(isHMove&&hasMove) {
-                    if (self.isAuto) {
-                        clearInterval(self.autoTimer);
-                        self.autoPlay();
-                        isHMove = false;
-                    }
-                }
-            }
-            function init() {
-                self.dom.on("mousedown touchstart", initHMoveStart);
-                self.dom.on("mousemove touchmove", initHMoveMove);
-                self.dom.on("mouseup touchend", initHMoveEnd)
-            }
-            init()
+                self.autoTimer = setInterval(function () {
+                    self.jian()
+                }, self.tSpeed);
+                clearTimeout(timer);
+            }, 100)
         }
+    },
+
+    //向右转
+    add :function() {
+        var self = this;
+        self.tIndex++;
+        if (self.tIndex > self.tImgObj.length - 1) {
+            self.tIndex = 0
+        }
+        self.move()
+    },
+    //向左转
+    jian: function() {
+        var self = this;
+        self.tIndex--;
+        if (self.tIndex < 0) {
+            self.tIndex = self.tImgObj.length - 1
+        }
+        self.move()
+    },
+    //移动
+    move:function() {
+        var self = this;
+        self.content.clearRect(0, 0, self.tWidth, self.tHeight);
+        self.content.drawImage(self.tImgObj[self.tIndex], 0, (self.tHeight - self.tWidth / self.imgWidth * self.imgHeight) / 2, self.tWidth, self.tWidth / self.imgWidth * self.imgHeight)
+
+    },
+    pause:function(){
+        var self = this;
+        self.paused = true;
+        clearInterval(self.autoTimer);
+    },
+    //手动切换方法
+    initHScroll:function () {
+        var self = this;
+        var nHStartX;
+        var isHMove = false;//是否正在移动中
+        var hasMove = false;//是否触发了touchmove 事件
+        function initHMoveStart(e) {
+            e.preventDefault();
+            hasMove = false;
+            if (e.type == "touchstart") {
+                nHStartX =event.touches[0].pageX
+            } else {
+                nHStartX = e.x || e.pageX
+            }
+            isHMove = true;
+        }
+
+        function initHMoveMove(e) {
+            e.preventDefault();
+            //console.log(999);
+            hasMove = true;
+            if (isHMove) {
+                var moveP;
+                if (e.type == "touchmove") {
+                    moveP = event.touches[0].pageX;
+
+                } else {
+                    moveP = e.x || e.pageX
+                }
+                var hm = nHStartX - moveP;
+                if (hm < 0 ) {
+
+                    if (self.isAuto) {
+                        clearInterval(self.autoTimer)
+                    }
+                    self.add()
+                }else if(hm > 0 ){
+
+                    if (self.isAuto) {
+                        clearInterval(self.autoTimer)
+                    }
+                    self.jian()
+                }
+                nHStartX = moveP
+            }
+        }
+
+        function initHMoveEnd(e) {
+            e.preventDefault();
+            console.log(isHMove,hasMove);
+            if(isHMove&&hasMove) {
+                if (self.isAuto) {
+                    clearInterval(self.autoTimer);
+                    self.autoPlay();
+                    isHMove = false;
+                }
+            }
+        }
+        function init() {
+            self.dom.on("mousedown touchstart", initHMoveStart);
+            self.dom.on("mousemove touchmove", initHMoveMove);
+            self.dom.on("mouseup touchend", initHMoveEnd)
+        }
+        init()
+    }
 };
 
 

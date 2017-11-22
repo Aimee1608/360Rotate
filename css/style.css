@@ -171,11 +171,8 @@ body {
   position: relative;
 }
 .carRotate .blackCar,
-.carRotate .silveryCar,
 .carRotate .whiteCar,
-.carRotate .redCar,
-.carRotate .blueCar,
-.carRotate .goldenCar {
+.carRotate .redCar {
   width: 100%;
   height: 100%;
   position: absolute;
@@ -209,35 +206,19 @@ body {
   display: block;
 }
 .tiaoBox .MT-box span {
-  width: 1.06666667rem;
+  width: 1.6rem;
   height: 0.8rem;
   display: inline-block;
   background: #333333;
   margin-right: 0.05333333rem;
 }
 .tiaoBox .MT-box span:first-of-type {
-  margin-left: 1.36rem;
+  margin-left: 2.4rem;
   background: #000;
 }
 .tiaoBox .MT-box span:nth-of-type(2) {
-  background: silver;
+  background: #626365;
 }
 .tiaoBox .MT-box span:nth-of-type(3) {
-  background: #fff;
-}
-.tiaoBox .MT-box span:nth-of-type(4) {
   background: #f00;
-}
-.tiaoBox .MT-box span:nth-of-type(5) {
-  background: #00f;
-}
-.tiaoBox .MT-box span:nth-of-type(6) {
-  background: goldenrod;
-}
-.tiaoBox .changeBtn {
-  width: 1.33333333rem;
-  height: 1.06666667rem;
-  position: absolute;
-  right: 0;
-  top: 0;
 }
